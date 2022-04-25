@@ -1,7 +1,8 @@
-add_executable(intro main.cpp)
-
+# Generic test that uses conan libs
+file(GLOB source_files_intro "*.cpp")
+add_executable(intro ${source_files_intro})
 target_link_libraries(
-  intro
+    intro
   PRIVATE project_options
           project_warnings
           )

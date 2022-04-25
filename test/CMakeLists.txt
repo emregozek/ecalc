@@ -1,4 +1,4 @@
-option(ENABLE_CATCH2_TESTS "Enable catch2 tests" ON)
+option(ENABLE_CATCH2_TESTS "Enable catch2 tests" OFF)
 if(ENABLE_CATCH2_TESTS)
   message("Building catch2 tests")
   add_subdirectory(catch2)
