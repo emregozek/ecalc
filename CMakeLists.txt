@@ -18,7 +18,7 @@ set(ENABLE_DEVELOPER_MODE
     CACHE BOOL "Enable 'developer mode'")
 
 # Change this to false if you want to disable warnings_as_errors in developer mode
-set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT TRUE)
+set(OPT_WARNINGS_AS_ERRORS_DEVELOPER_DEFAULT FALSE)
 
 # Add project_options v0.17.0
 # https://github.com/cpp-best-practices/project_options
@@ -108,11 +108,10 @@ add_subdirectory(configured_files)
 add_subdirectory(src)
 
 # Adding the tests:
-option(ENABLE_TESTING "Enable the tests" OFF)
+option(ENABLE_TESTING "Enable the tests" ON)
 if(ENABLE_TESTING)
   enable_testing()
-  message("Building Tests. Be sure to check out test/constexpr_tests for constexpr
-testing")
+  message("Building Tests")
   add_subdirectory(test)
 endif()
 

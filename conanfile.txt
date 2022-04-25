@@ -1,7 +1,6 @@
 # Docs at https://docs.conan.io/en/latest/reference/conanfile_txt.html
 
 [requires]
-fmt/8.1.1
 
 [generators]
 cmake_find_package_multi
