@@ -123,11 +123,17 @@ if(MSVC)
 endif()
 
 # set the startup project for the "play" button in MSVC
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT intro)
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ecalc_exe)
 
 # Add other targets that you want installed here, be default we just package the one executable
 # we know we want to ship
-package_project(TARGETS intro)
+include(${PROJECT_SOURCE_DIR}/cmake.macros)
+subdirlist(children_dirs ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+
+foreach(child ${children_dirs})
+  get_filename_component(module ${child} NAME)
+  package_project(TARGETS ${module}_exe)
+endforeach()
 
 # Experience shows that explicit package naming can help make it easier to sort
 # out potential ABI related issues before they start, while helping you
