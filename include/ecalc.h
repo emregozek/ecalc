@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <iosfwd>
 #include <stack>
@@ -13,9 +14,7 @@ class calculate {
         double operator()() const;
         friend std::ostream& operator<<(std::ostream& os, const calculate& c);
     private:
-        using size_t_pair = std::pair<std::size_t, std::size_t>;
-        using pq_pair = std::pair<int, size_t_pair>;
-        std::priority_queue<pq_pair> subexpression(const std::string& str) const;
+        double subexpression() const;
         std::string m_input_str;
 };
 
