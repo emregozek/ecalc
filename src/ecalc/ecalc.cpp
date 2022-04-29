@@ -14,22 +14,66 @@ std::ostream& operator<<(std::ostream& os, const calculate& c) {
     return os << "[" << c.m_input_str << "]";
 }
 
+using p_operand = std::pair<std::size_t, double>;
+using p_operator = std::pair<std::size_t, char>;
+using p_expr_def = std::pair<std::vector<p_operand>, std::vector<p_operator>>;
+using p_expr = std::pair<std::size_t, p_expr_def>;
+
 std::priority_queue<calculate::pq_pair> calculate::subexpression(const std::string& str) const {
     using namespace std;
     priority_queue<pq_pair> result;
-    stack<size_t> left_prnth;
+    stack<p_expr> expr_st;
+    // each expression
+    // start:size_t
+    // operator(s)<operator, index> : pair<string, size_t>
+    // operand(s)<operand, index> : pair<double, size_t>
+    // (2 + ( 3 - 1 ) + 4 )
     size_t i {};
-    for_each(str.begin(), str.end(),
-        [&left_prnth, &result, &i] (const char& c) {
-            if (c == '(') {
-                left_prnth.push(i);
-            } else if (c == ')') {
-                result.push(make_pair(left_prnth.size(), make_pair(left_prnth.top(), i)));
-                left_prnth.pop();
+    auto str_it {str.cbegin()};
+    while (str_it != str.cend()) {
+        char c = *str_it;
+        if (c == '(') {
+            p_expr_def expr_def;
+            expr_st.push(make_pair(i, expr_def));
+        } else if (c == ')') {
+            // 5 + (2 + ( 3 - 1 ) + 4 + ( 6 + 7 ) ) - 2
+            p_expr cur_expr = expr_st.top();
+            double cur_expr_result = cur_expr.second.first.front().second;
+            std::size_t j {1};
+            for (const auto& sc : cur_expr.second.second) {
+                switch (sc.second) {
+                    case '+':
+                        cur_expr_result += cur_expr.second.first[j++].second;
+                        break;
+                    case '-':
+                        cur_expr_result -= cur_expr.second.first[j++].second;
+                        break;
+                    case '*':
+                        cur_expr_result *= cur_expr.second.first[j++].second;
+                        break;
+                    case '/':
+                        cur_expr_result /= cur_expr.second.first[j++].second;
+                        break;
+                    default:
+                        break;
+                }
             }
-            ++i;
+            expr_st.pop();
+            if (!expr_st.empty()) {
+                expr_st.top().second.first.push_back(make_pair(cur_expr.first, cur_expr_result));
+            }
+        } else if (c == '+' || c == '-' || c == '*' || c == '/') {
+            expr_st.top().second.second.push_back(make_pair(i, c));
+        } else {
+            if (auto idx = str.find_first_not_of("0123456789", i); idx != std::string::npos) {
+                auto operand = std::stod({str.substr(i, idx)});
+                expr_st.top().second.first.push_back(make_pair(i, operand));
+                str_it = str.cbegin() + static_cast<long>(idx);
+            }
         }
-    );
+        ++str_it;
+    }
+
     return result;
 }
 
@@ -46,11 +90,11 @@ double calculate::operator()() const {
 }
 
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        std::cout << "Please provide your expression in \"<expression>\" form\n";
-        return 0;
-    }
-    auto f = ecalc::calculate{argv[1]};
-    std::cout << f() << "\n";
-}
+// int main(int argc, char *argv[]) {
+//     if (argc != 2) {
+//         std::cout << "Please provide your expression in \"<expression>\" form\n";
+//         return 0;
+//     }
+//     auto f = ecalc::calculate{argv[1]};
+//     std::cout << f() << "\n";
+// }

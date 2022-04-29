@@ -18,7 +18,8 @@
 //     EXPECT_DOUBLE_EQ(d, 3.3);
 // }
 TEST(gtest_ecalc, paranthesis_parsing) {
-    ecalc::calculate my_calc{"(1 + 2) * (3 * (5 + 2))"};
+    ecalc::calculate my_calc{"(1+2)+3-(5+2))"};
+    std::cout << "LOL\n\n";
     std::cout << my_calc << "\n";
     my_calc();
 }
