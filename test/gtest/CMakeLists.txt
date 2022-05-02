@@ -26,8 +26,8 @@ foreach(child ${children_dirs})
       target_link_libraries(
         gtest_${module}
         ${module}_lib
-        project_warnings
-        project_options
+        # project_warnings
+        # project_options
         gtest_main)
         message("test discovery")
         gtest_discover_tests(gtest_${module} DISCOVERY_MODE PRE_TEST)
